@@ -1,107 +1,65 @@
-/*
-* one.c -- Lua core, libraries, and interpreter in a single file
-*/
+-- Sheet for Rondo Alla Turca by Wolfgang Amadeus Mozart
 
-/* default is to build the full interpreter */
-#ifndef MAKE_LIB
-#ifndef MAKE_LUAC
-#ifndef MAKE_LUA
-#define MAKE_LUA
-#endif
-#endif
-#endif
+shared.stop = true -- stops the player at any time if true
+-- CONFIG:
+shared.ftime = 9*60 + 25 -- time in seconds for the song to finish (extended by |)
+shared.delay = nil -- delay overides the ftime
+shared.tempo = nil -- tempo overides the delay
 
-/* choose suitable platform-specific features */
-/* some of these may need extra libraries such as -ldl -lreadline -lncurses */
-#if 0
-#define LUA_USE_LINUX
-#define LUA_USE_MACOSX
-#define LUA_USE_POSIX
-#define LUA_ANSI
-#endif
-
-/* no need to change anything below this line ----------------------------- */
-
-#include "lprefix.h"
-
-#include <assert.h>
-#include <ctype.h>
-#include <errno.h>
-#include <float.h>
-#include <limits.h>
-#include <locale.h>
-#include <math.h>
-#include <setjmp.h>
-#include <signal.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-
-
-/* setup for luaconf.h */
-#define LUA_CORE
-#define LUA_LIB
-#define ltable_c
-#define lvm_c
-#include "luaconf.h"
-
-/* do not export internal symbols */
-#undef LUAI_FUNC
-#undef LUAI_DDEC
-#undef LUAI_DDEF
-#define LUAI_FUNC	static
-#define LUAI_DDEC(def)	/* empty */
-#define LUAI_DDEF	static
-
-/* core -- used by all */
-#include "lzio.c"
-#include "lctype.c"
-#include "lopcodes.c"
-#include "lmem.c"
-#include "lundump.c"
-#include "ldump.c"
-#include "lstate.c"
-#include "lgc.c"
-#include "llex.c"
-#include "lcode.c"
-#include "lparser.c"
-#include "ldebug.c"
-#include "lfunc.c"
-#include "lobject.c"
-#include "ltm.c"
-#include "lstring.c"
-#include "ltable.c"
-#include "ldo.c"
-#include "lvm.c"
-#include "lapi.c"
-
-/* auxiliary library -- used by all */
-#include "lauxlib.c"
-
-/* standard library  -- not used by luac */
-#ifndef MAKE_LUAC
-#include "lbaselib.c"
-#include "lcorolib.c"
-#include "ldblib.c"
-#include "liolib.c"
-#include "lmathlib.c"
-#include "loadlib.c"
-#include "loslib.c"
-#include "lstrlib.c"
-#include "ltablib.c"
-#include "lutf8lib.c"
-#include "linit.c"
-#endif
-
-/* lua */
-#ifdef MAKE_LUA
-#include "lua.c"
-#endif
-
-/* luac */
-#ifdef MAKE_LUAC
-#include "luac.c"
-#endif
+shared.scr = [[      u       u       u       u       u       u       u       u 
+      u       u       u       u       u       u       u       u 
+      u    [uf]    [uf]   [uf0]   [uf0]   [uf0]   [uf0]   [uf0] 
+  [uf0]   [uf0]   [uf0]   [uf0]   [uf0]   [uf0]   [uf0]   [uf0] 
+  [uf0]       6    [80]       3    [80]       3       $       % 
+      6    [80]       3    [80]       u       u       u       u 
+      u       u       u       u       u       u       u       u 
+      u       u       u       u       u       u       u       u 
+      u       i       u       Y       u    [up]       s       d 
+      d       d       d       d       s       a       d       s 
+      s       s       s       s       a       p       s       a 
+      a       a       a       I       a       O       u       u 
+      u       u       u       u       u       u       u       u 
+      u       u       u       u       u       u       u       i 
+      u       Y       u       p       s       f       j       l 
+      z       l       k       z       l       k       j       l 
+      k       j       H       k       j       f       s       f 
+      g       f       d       s       a       p       O       a 
+      p       u       u       u       u       u       u       u 
+      u       u       u       u       u       u       u       u 
+      u       u       u       u       u       u       i       u 
+      Y       u       p       s       d       d       d       d 
+      d       s       a       d       s       s       s       s 
+      s       a       p       s       a       a       a       a 
+      I       a       O       u       u       u       u       u 
+      u       u       u       u       u       u       u       u 
+      u       u       u       u       i       u       Y       u 
+      p       s       f       j       l       z       l       k 
+      z       l       k       j       l       k       j       H 
+      k       j       f       s       f       g       f       d 
+      s       a       p       O       a       p       d       S 
+      d       f       g       f       d       g       f       d 
+      s       d       f       s       a       P       a       s 
+      d       s       a       d       s       p       s       f 
+      j       f       s       p       d       S       d       f 
+      g       f       d       g       f       d       s       d 
+      f       j       d       g       f       s       d       a 
+      p       f    [pj]       u       u       u       u       u 
+      u       u       u       u       u       u       u       u 
+      u       u       u       u       u       u       u       u 
+      i       u       Y       u       p       s       d       d 
+      d       d       d       s       a       d       s       s 
+      s       s       s       a       p       s       a       a 
+      a       a       I       a       O       u       u       u 
+      u       u       u       u       u       u       u       u 
+      u       u       u       u       u       u       i       u 
+      Y       u       p       s       f       j       l       z 
+      l       k       z       l       k       j       l       k 
+      j       H       k       j       f       s       f       g 
+      f       d       s       a       p       O       a       p 
+      d       S       d       f       g       f       d       g 
+      f       d       s       d       f       s       a       P 
+      a       s       d       s       a       d       s       p 
+      s       f       j       f       s       p       d       S 
+      d       f       g       f       d       g       f       d 
+      s       d       f       j       d       g       f       s 
+      d       a       p   [uf3]   [pj6] 
